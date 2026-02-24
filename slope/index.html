@@ -1,25 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sigma Slope | Custom Edition</title>
+    <title>Sigma Slope | Custom Lite</title>
     <style>
-        body { margin: 0; overflow: hidden; background: #000; font-family: sans-serif; }
-        #ui { position: absolute; top: 20px; width: 100%; text-align: center; color: #00d4ff; font-size: 24px; font-weight: bold; pointer-events: none; }
-        canvas { display: block; }
+        body { margin: 0; overflow: hidden; background: #0b0e14; font-family: sans-serif; }
+        #ui { position: absolute; top: 20px; width: 100%; text-align: center; color: #00d4ff; font-size: 24px; pointer-events: none; }
     </style>
 </head>
 <body>
     <div id="ui">SCORE: <span id="score">0</span></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        let scene, camera, renderer, ball, track = [];
-        let score = 0;
-        let speed = 0.5;
+        let scene, camera, renderer, ball, platforms = [], obstacles = [];
+        let score = 0, speed = 0.5;
 
         // --- CUSTOMIZE TRACK LENGTH HERE ---
-        // 1 = Platform, 0 = Hole (Empty space)
+        // 1 = Platform, 0 = Hole, 2 = Obstacle (Red Box)
         // To make the track shorter, just remove numbers from this list!
-        const trackData = [1,1,1,1,1,0,1,1,1,0,0,1,1,1,1,1,1,0,1,1,1]; 
+        const trackData = [1,1,1,2,1,0,1,2,1,1,1,0,1,1,2,1,1]; 
 
         function init() {
             scene = new THREE.Scene();
@@ -28,23 +26,33 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement);
 
-            // Create the Ball
-            const geometry = new THREE.SphereGeometry(0.5, 32, 32);
-            const material = new THREE.MeshPhongMaterial({ color: 0x00d4ff, shininess: 100 });
-            ball = new THREE.Mesh(geometry, material);
+            // Create Ball (Player)
+            const ballGeo = new THREE.SphereGeometry(0.5, 32, 32);
+            const ballMat = new THREE.MeshPhongMaterial({ color: 0x00d4ff, shininess: 100 });
+            ball = new THREE.Mesh(ballGeo, ballMat);
             ball.position.y = 1;
             scene.add(ball);
 
-            // Create the Track based on our trackData
+            // Generate Track
             trackData.forEach((type, i) => {
-                if(type === 1) {
-                    const platGeo = new THREE.BoxGeometry(5, 0.5, 10);
+                const zPos = -i * 10;
+                const yPos = -i * 1.5;
+
+                if (type >= 1) { // Platform
+                    const platGeo = new THREE.BoxGeometry(6, 0.5, 10);
                     const platMat = new THREE.MeshPhongMaterial({ color: 0x1c2128 });
                     const plat = new THREE.Mesh(platGeo, platMat);
-                    plat.position.z = -i * 10;
-                    plat.position.y = -i * 1.5; // This creates the "Slope" angle
+                    plat.position.set(0, yPos, zPos);
                     scene.add(plat);
-                    track.push(plat);
+                    platforms.push(plat);
+                }
+                if (type === 2) { // Add Obstacle (Red Block)
+                    const obsGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+                    const obsMat = new THREE.MeshPhongMaterial({ color: 0xff4444 });
+                    const obs = new THREE.Mesh(obsGeo, obsMat);
+                    obs.position.set((Math.random() - 0.5) * 4, yPos + 1, zPos);
+                    scene.add(obs);
+                    obstacles.push(obs);
                 }
             });
 
@@ -54,36 +62,45 @@
             scene.add(light);
             scene.add(new THREE.AmbientLight(0x404040));
 
-            camera.position.z = 8;
-            camera.position.y = 5;
+            camera.position.set(0, 5, 10);
             animate();
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            
-            // Move Ball Forward (Down the slope)
             ball.position.z -= speed;
             ball.position.y -= speed * 0.15;
 
-            // Camera follows ball
-            camera.position.z = ball.position.z + 10;
-            camera.position.y = ball.position.y + 5;
+            // Camera follow
+            camera.position.z = ball.position.z + 8;
+            camera.position.y = ball.position.y + 4;
             camera.lookAt(ball.position);
 
-            // Simple "Short Track" End Logic
+            // Collision Detection (Red Blocks)
+            obstacles.forEach(obs => {
+                if (ball.position.distanceTo(obs.position) < 1.2) {
+                    alert("GAME OVER! Score: " + score);
+                    location.reload();
+                }
+            });
+
+            // Fall Off Logic
+            if (ball.position.y < -100) { location.reload(); }
+
+            // Win Logic (End of trackData)
             if (ball.position.z < -(trackData.length * 10)) {
-                alert("YOU WON! Level Complete.");
-                ball.position.set(0, 1, 0); // Reset
+                alert("LEVEL COMPLETE! SIGMA STATUS REACHED.");
+                location.reload();
             }
 
+            score = Math.floor(Math.abs(ball.position.z));
+            document.getElementById('score').innerText = score;
             renderer.render(scene, camera);
         }
 
-        // Controls
         window.addEventListener('keydown', (e) => {
-            if(e.key === "ArrowLeft") ball.position.x -= 0.5;
-            if(e.key === "ArrowRight") ball.position.x += 0.5;
+            if(e.key === "ArrowLeft") ball.position.x -= 0.6;
+            if(e.key === "ArrowRight") ball.position.x += 0.6;
         });
 
         init();
