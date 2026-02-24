@@ -1,62 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sigma Edition Hub</title>
     <style>
-        :root { --primary: #00d4ff; --bg: #0b0e14; --card-bg: #1c2128; }
-        body { background: var(--bg); color: white; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
-        .game-grid { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 40px; }
-        .game-card { 
-            background: var(--card-bg); border: 2px solid #30363d; border-radius: 15px; 
-            width: 320px; height: 400px; overflow: hidden; display: flex; flex-direction: column;
+        body { background: #0b0e14; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .grid { display: flex; justify-content: center; margin-top: 50px; }
+        .card { 
+            background: #1c2128; border: 2px solid #00d4ff; border-radius: 15px; 
+            width: 400px; height: 350px; overflow: hidden; position: relative;
         }
-        .game-view { position: relative; flex-grow: 1; background: #000; display: flex; align-items: center; justify-content: center; }
+        .view { width: 100%; height: 280px; background: #000; display: flex; align-items: center; justify-content: center; }
         iframe { width: 100%; height: 100%; border: none; display: none; }
         .play-btn { 
-            padding: 15px 30px; background: var(--primary); color: #000; border: none; 
-            border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; z-index: 5;
+            padding: 15px 30px; background: #00d4ff; color: black; border: none; 
+            border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 18px;
         }
-        .play-btn:hover { background: #fff; transform: scale(1.05); }
-        .footer { padding: 15px; background: #161b22; color: var(--primary); font-weight: bold; }
+        .title { padding: 15px; font-weight: bold; color: #00d4ff; }
     </style>
 </head>
 <body>
 
     <h1>SIGMA HUB v1.0</h1>
 
-    <div class="game-grid">
-        <div class="game-card">
-            <div class="game-view">
-                <button class="play-btn" onclick="openGame(this, './slope/index.html')">PLAY SLOPE</button>
+    <div class="grid">
+        <div class="card">
+            <div class="view">
+                <button class="play-btn" onclick="this.style.display='none'; this.nextElementSibling.style.display='block'; this.nextElementSibling.src='./slope/index.html'">PLAY SLOPE</button>
                 <iframe allow="fullscreen"></iframe>
             </div>
-            <div class="footer">SLOPE (SIGMA LITE)</div>
-        </div>
-
-        <div class="game-card" style="opacity: 0.4;">
-            <div class="game-view">
-                <button class="play-btn" style="background:#444; cursor:default;">LOCKED</button>
-            </div>
-            <div class="footer">SPACE WAVES</div>
+            <div class="title">SLOPE</div>
         </div>
     </div>
 
-    <script>
-        function openGame(btn, url) {
-            // 1. Find the iframe that is right next to this specific button
-            const frame = btn.nextElementSibling;
-            
-            // 2. Hide the button and show the iframe
-            btn.style.display = 'none';
-            frame.style.display = 'block';
-            
-            // 3. Set the source to start the game
-            frame.src = url;
-            
-            console.log("Sigma Game Launched: " + url);
-        }
-    </script>
 </body>
 </html>
