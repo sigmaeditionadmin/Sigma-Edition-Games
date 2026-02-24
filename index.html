@@ -1,54 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sigma Edition | Gaming Hub</title>
-    <style>
-        :root { --primary: #00d4ff; --bg: #0b0e14; --card-bg: #1c2128; --text: #f0f6fc; }
-        body { background-color: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 20px; text-align: center; }
-        header { padding: 40px; background: linear-gradient(135deg, #6e45e2, var(--primary)); border-radius: 20px; margin-bottom: 30px; }
-        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
-        .game-card { background: var(--card-bg); border-radius: 15px; border: 1px solid #30363d; overflow: hidden; position: relative; }
-        .game-box { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background: #000; }
-        .game-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; display: none; }
-        .play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 15px 30px; background: var(--primary); color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; z-index: 10; transition: 0.3s; }
-        .game-label { padding: 15px; font-weight: bold; font-size: 1.1rem; background: #161b22; color: var(--primary); }
-    </style>
-</head>
-<body>
-
-<header>
-    <h1>SIGMA EDITION HUB</h1>
-    <p>Using Map-L Style Mirror Links</p>
-</header>
-
-<div class="game-grid">
-    <div class="game-card">
-        <div class="game-box">
-            <button class="play-btn" onclick="startGame(this, 'https://map-l.github.io/slope/')">PLAY SLOPE</button>
-            <iframe allow="fullscreen"></iframe>
-        </div>
-        <div class="game-label">Slope</div>
+<div class="game-card">
+    <div class="game-box">
+        <button class="play-btn" onclick="startGame(this, './slope/index.html')">PLAY MY SLOPE</button>
+        <iframe allow="fullscreen"></iframe>
     </div>
-
-    <div class="game-card">
-        <div class="game-box">
-            <button class="play-btn" onclick="startGame(this, 'https://map-l.github.io/moto-x3m/')">PLAY MOTO X3M</button>
-            <iframe allow="fullscreen"></iframe>
-        </div>
-        <div class="game-label">Moto X3M</div>
-    </div>
+    <div class="game-label">Slope (My Version)</div>
 </div>
-
-<script>
-    function startGame(btn, url) {
-        const iframe = btn.nextElementSibling;
-        iframe.src = url;
-        iframe.style.display = "block";
-        btn.style.display = "none";
-    }
-</script>
-
-</body>
-</html>
