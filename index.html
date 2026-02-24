@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sigma Edition | 2026</title>
+    <title>Sigma Edition | Game Hub</title>
     <style>
         :root { --primary: #00d4ff; --bg: #0b0e14; --card-bg: #1c2128; --text: #f0f6fc; }
         body { background-color: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 20px; text-align: center; }
@@ -11,7 +11,10 @@
         .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
         .game-card { background: var(--card-bg); border-radius: 15px; border: 1px solid #30363d; overflow: hidden; position: relative; height: 350px; }
         .game-box { position: relative; width: 100%; height: 280px; background: #000; display: flex; align-items: center; justify-content: center; }
+        
+        /* The iframe starts hidden so the hub looks clean */
         .game-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; display: none; }
+        
         .play-btn { padding: 15px 30px; background: var(--primary); color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; z-index: 10; font-size: 18px; }
         .game-label { padding: 15px; font-weight: bold; background: #161b22; color: var(--primary); }
     </style>
@@ -34,20 +37,22 @@
 
     <div class="game-card">
         <div class="game-box">
-            <button class="play-btn" style="background: #333; cursor: default;">COMING SOON</button>
+            <button class="play-btn" style="background: #333; cursor: not-allowed;">COMING SOON</button>
         </div>
-        <div class="game-label">Space Waves</div>
+        <div class="game-label">Future Game</div>
     </div>
 </div>
 
 <script>
     function activateGame(btn, url) {
-        // Find the iframe next to the button that was clicked
+        // Find the iframe next to the button
         const iframe = btn.nextElementSibling;
-        // Inject the game URL and show the window
+        
+        // Show the iframe and load the game
         iframe.src = url;
         iframe.style.display = "block";
-        // Hide the button so it doesn't block the game
+        
+        // Hide the play button so it's not in the way
         btn.style.display = "none";
     }
 </script>
