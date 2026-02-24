@@ -1,23 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sigma Slope | Custom Lite</title>
+    <title>Sigma Slope | Death Menu Edition</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; background: #0b0e14; font-family: sans-serif; }
-        #ui { position: absolute; top: 20px; width: 100%; text-align: center; color: #00d4ff; font-size: 24px; pointer-events: none; }
+        body { margin: 0; background: #0b0e14; overflow: hidden; font-family: sans-serif; }
+        #overlay, #death-menu {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            color: #00d4ff; text-align: center; z-index: 10;
+            background: rgba(0,0,0,0.9); padding: 30px; border-radius: 15px; border: 2px solid #00d4ff; width: 300px;
+        }
+        #death-menu { display: none; border-color: #ff4444; color: #ff4444; }
+        .btn { 
+            padding: 12px 25px; margin: 10px; border: none; border-radius: 8px; 
+            font-weight: bold; cursor: pointer; font-size: 16px; width: 80%;
+        }
+        .yes-btn { background: #00d4ff; color: #000; }
+        .no-btn { background: #30363d; color: #fff; }
+        #ui { position: absolute; top: 20px; width: 100%; text-align: center; color: #fff; font-size: 24px; z-index: 5; }
     </style>
 </head>
 <body>
     <div id="ui">SCORE: <span id="score">0</span></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-        let scene, camera, renderer, ball, platforms = [], obstacles = [];
-        let score = 0, speed = 0.5;
 
-        // --- CUSTOMIZE TRACK LENGTH HERE ---
-        // 1 = Platform, 0 = Hole, 2 = Obstacle (Red Box)
-        // To make the track shorter, just remove numbers from this list!
-        const trackData = [1,1,1,2,1,0,1,2,1,1,1,0,1,1,2,1,1]; 
+    <div id="overlay">
+        <h1>SIGMA SLOPE</h1>
+        <p>WASD / ARROWS TO STEER</p>
+        <button class="btn yes-btn" onclick="startGame()">START GAME</button>
+    </div>
+
+    <div id="death-menu">
+        <h1>YOU CRASHED!</h1>
+        <p>Keep playing?</p>
+        <button class="btn yes-btn" onclick="restartLevel()">TRY AGAIN</button>
+        <button class="btn no-btn" onclick="exitToHub()">EXIT TO HUB</button>
+    </div>
+
+    <script>
+        let scene, camera, renderer, ball, platforms = [];
+        let gameStarted = false, score = 0, speed = 0.5;
+        let keys = {};
 
         function init() {
             scene = new THREE.Scene();
@@ -26,84 +48,63 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement);
 
-            // Create Ball (Player)
+            // Ball
             const ballGeo = new THREE.SphereGeometry(0.5, 32, 32);
-            const ballMat = new THREE.MeshPhongMaterial({ color: 0x00d4ff, shininess: 100 });
+            const ballMat = new THREE.MeshPhongMaterial({ color: 0x00d4ff });
             ball = new THREE.Mesh(ballGeo, ballMat);
             ball.position.y = 1;
             scene.add(ball);
 
-            // Generate Track
-            trackData.forEach((type, i) => {
-                const zPos = -i * 10;
-                const yPos = -i * 1.5;
+            // Track Generation
+            for(let i=0; i<50; i++) {
+                const platGeo = new THREE.BoxGeometry(7, 0.5, 10);
+                const platMat = new THREE.MeshPhongMaterial({ color: 0x1c2128 });
+                const plat = new THREE.Mesh(platGeo, platMat);
+                plat.position.set(0, -i * 1.5, -i * 10);
+                scene.add(plat);
+                platforms.push(plat);
+            }
 
-                if (type >= 1) { // Platform
-                    const platGeo = new THREE.BoxGeometry(6, 0.5, 10);
-                    const platMat = new THREE.MeshPhongMaterial({ color: 0x1c2128 });
-                    const plat = new THREE.Mesh(platGeo, platMat);
-                    plat.position.set(0, yPos, zPos);
-                    scene.add(plat);
-                    platforms.push(plat);
-                }
-                if (type === 2) { // Add Obstacle (Red Block)
-                    const obsGeo = new THREE.BoxGeometry(1.5, 1.5, 1.5);
-                    const obsMat = new THREE.MeshPhongMaterial({ color: 0xff4444 });
-                    const obs = new THREE.Mesh(obsGeo, obsMat);
-                    obs.position.set((Math.random() - 0.5) * 4, yPos + 1, zPos);
-                    scene.add(obs);
-                    obstacles.push(obs);
-                }
-            });
-
-            // Lighting
-            const light = new THREE.DirectionalLight(0xffffff, 1);
-            light.position.set(5, 10, 7.5);
-            scene.add(light);
-            scene.add(new THREE.AmbientLight(0x404040));
-
+            scene.add(new THREE.DirectionalLight(0xffffff, 1));
             camera.position.set(0, 5, 10);
+
+            window.addEventListener('keydown', (e) => { keys[e.code] = true; });
+            window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+
             animate();
+        }
+
+        function startGame() {
+            gameStarted = true;
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function handleLoss() {
+            gameStarted = false; // Stop the ball immediately
+            document.getElementById('death-menu').style.display = 'block';
+        }
+
+        function restartLevel() {
+            // Reset ball position and score
+            ball.position.set(0, 1, 0);
+            score = 0;
+            document.getElementById('score').innerText = "0";
+            document.getElementById('death-menu').style.display = 'none';
+            gameStarted = true;
+        }
+
+        function exitToHub() {
+            // Reloads the main site Hub
+            window.parent.location.reload();
         }
 
         function animate() {
             requestAnimationFrame(animate);
-            ball.position.z -= speed;
-            ball.position.y -= speed * 0.15;
+            if (gameStarted) {
+                ball.position.z -= speed;
+                ball.position.y -= speed * 0.15;
+                if (keys['ArrowLeft'] || keys['KeyA']) ball.position.x -= 0.15;
+                if (keys['ArrowRight'] || keys['KeyD']) ball.position.x += 0.15;
 
-            // Camera follow
-            camera.position.z = ball.position.z + 8;
-            camera.position.y = ball.position.y + 4;
-            camera.lookAt(ball.position);
-
-            // Collision Detection (Red Blocks)
-            obstacles.forEach(obs => {
-                if (ball.position.distanceTo(obs.position) < 1.2) {
-                    alert("GAME OVER! Score: " + score);
-                    location.reload();
-                }
-            });
-
-            // Fall Off Logic
-            if (ball.position.y < -100) { location.reload(); }
-
-            // Win Logic (End of trackData)
-            if (ball.position.z < -(trackData.length * 10)) {
-                alert("LEVEL COMPLETE! SIGMA STATUS REACHED.");
-                location.reload();
-            }
-
-            score = Math.floor(Math.abs(ball.position.z));
-            document.getElementById('score').innerText = score;
-            renderer.render(scene, camera);
-        }
-
-        window.addEventListener('keydown', (e) => {
-            if(e.key === "ArrowLeft") ball.position.x -= 0.6;
-            if(e.key === "ArrowRight") ball.position.x += 0.6;
-        });
-
-        init();
-    </script>
-</body>
-</html>
+                // LOSS TRIGGERS
+                if (ball.position.y < -10 || Math.abs(ball.position.
