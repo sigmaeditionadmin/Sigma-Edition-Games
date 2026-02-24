@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sigma Slope | Death Menu Edition</title>
+    <title>Sigma Slope | Ultra Pro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         body { margin: 0; background: #0b0e14; overflow: hidden; font-family: sans-serif; }
-        #overlay, #death-menu {
+        #menu, #death-screen {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             color: #00d4ff; text-align: center; z-index: 10;
-            background: rgba(0,0,0,0.9); padding: 30px; border-radius: 15px; border: 2px solid #00d4ff; width: 300px;
+            background: rgba(0,0,0,0.9); padding: 30px; border-radius: 15px; border: 2px solid #00d4ff; width: 280px;
         }
-        #death-menu { display: none; border-color: #ff4444; color: #ff4444; }
+        #death-screen { display: none; border-color: #ff4444; color: #ff4444; }
         .btn { 
-            padding: 12px 25px; margin: 10px; border: none; border-radius: 8px; 
-            font-weight: bold; cursor: pointer; font-size: 16px; width: 80%;
+            padding: 12px; margin: 10px 0; border: none; border-radius: 8px; 
+            font-weight: bold; cursor: pointer; font-size: 16px; width: 100%; display: block;
         }
-        .yes-btn { background: #00d4ff; color: #000; }
-        .no-btn { background: #30363d; color: #fff; }
-        #ui { position: absolute; top: 20px; width: 100%; text-align: center; color: #fff; font-size: 24px; z-index: 5; }
+        .play-btn { background: #00d4ff; color: #000; }
+        .fs-btn { background: #6e45e2; color: #fff; }
+        .exit-btn { background: #30363d; color: #fff; }
+        #ui { position: absolute; top: 20px; width: 100%; text-align: center; color: #fff; font-size: 24px; }
     </style>
 </head>
 <body>
     <div id="ui">SCORE: <span id="score">0</span></div>
 
-    <div id="overlay">
+    <div id="menu">
         <h1>SIGMA SLOPE</h1>
-        <p>WASD / ARROWS TO STEER</p>
-        <button class="btn yes-btn" onclick="startGame()">START GAME</button>
+        <button class="btn play-btn" onclick="startGame()">START GAME</button>
+        <button class="btn fs-btn" onclick="toggleFullScreen()">FULL SCREEN</button>
     </div>
 
-    <div id="death-menu">
-        <h1>YOU CRASHED!</h1>
-        <p>Keep playing?</p>
-        <button class="btn yes-btn" onclick="restartLevel()">TRY AGAIN</button>
-        <button class="btn no-btn" onclick="exitToHub()">EXIT TO HUB</button>
+    <div id="death-screen">
+        <h1>GAME OVER</h1>
+        <button class="btn play-btn" onclick="restartGame()">RESTART</button>
+        <button class="btn fs-btn" onclick="toggleFullScreen()">FULL SCREEN</button>
+        <button class="btn exit-btn" onclick="exitToHub()">EXIT TO HUB</button>
     </div>
 
     <script>
         let scene, camera, renderer, ball, platforms = [];
-        let gameStarted = false, score = 0, speed = 0.5;
-        let keys = {};
+        let gameStarted = false, score = 0, speed = 0.5, keys = {};
 
         function init() {
             scene = new THREE.Scene();
@@ -48,15 +48,13 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement);
 
-            // Ball
             const ballGeo = new THREE.SphereGeometry(0.5, 32, 32);
             const ballMat = new THREE.MeshPhongMaterial({ color: 0x00d4ff });
             ball = new THREE.Mesh(ballGeo, ballMat);
             ball.position.y = 1;
             scene.add(ball);
 
-            // Track Generation
-            for(let i=0; i<50; i++) {
+            for(let i=0; i<100; i++) {
                 const platGeo = new THREE.BoxGeometry(7, 0.5, 10);
                 const platMat = new THREE.MeshPhongMaterial({ color: 0x1c2128 });
                 const plat = new THREE.Mesh(platGeo, platMat);
@@ -67,44 +65,28 @@
 
             scene.add(new THREE.DirectionalLight(0xffffff, 1));
             camera.position.set(0, 5, 10);
-
             window.addEventListener('keydown', (e) => { keys[e.code] = true; });
             window.addEventListener('keyup', (e) => { keys[e.code] = false; });
-
             animate();
+        }
+
+        // --- NEW FULL SCREEN FUNCTION ---
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
         }
 
         function startGame() {
             gameStarted = true;
-            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('menu').style.display = 'none';
         }
 
-        function handleLoss() {
-            gameStarted = false; // Stop the ball immediately
-            document.getElementById('death-menu').style.display = 'block';
-        }
-
-        function restartLevel() {
-            // Reset ball position and score
+        function restartGame() {
             ball.position.set(0, 1, 0);
             score = 0;
-            document.getElementById('score').innerText = "0";
-            document.getElementById('death-menu').style.display = 'none';
-            gameStarted = true;
-        }
-
-        function exitToHub() {
-            // Reloads the main site Hub
-            window.parent.location.reload();
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            if (gameStarted) {
-                ball.position.z -= speed;
-                ball.position.y -= speed * 0.15;
-                if (keys['ArrowLeft'] || keys['KeyA']) ball.position.x -= 0.15;
-                if (keys['ArrowRight'] || keys['KeyD']) ball.position.x += 0.15;
-
-                // LOSS TRIGGERS
-                if (ball.position.y < -10 || Math.abs(ball.position.
+            document.getElementById('score').innerText
