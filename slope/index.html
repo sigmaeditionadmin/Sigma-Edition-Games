@@ -1,64 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sigma Slope | Pro Ultra</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        body { margin: 0; background: #0b0e14; overflow: hidden; font-family: sans-serif; }
-        #menu, #death-screen {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            color: #00d4ff; text-align: center; z-index: 10;
-            background: rgba(0,0,0,0.95); padding: 30px; border-radius: 15px; border: 2px solid #00d4ff; width: 280px;
-        }
-        #death-screen { display: none; border-color: #ff4444; color: #ff4444; }
+        body { background-color: black; color: #00d4ff; font-family: sans-serif; text-align: center; margin: 0; overflow: hidden; }
+        .menu { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 15px; }
+        button { width: 280px; padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; font-size: 18px; transition: 0.2s; }
         
-        /* Floating Exit Full Screen Button - Only shows when needed */
-        #exit-fs-float {
-            position: absolute; top: 10px; right: 10px; z-index: 20;
-            display: none; background: rgba(255,255,255,0.2); color: white;
-            border: 1px solid white; padding: 5px 10px; cursor: pointer; border-radius: 5px;
-        }
-
-        .btn { 
-            padding: 12px; margin: 10px 0; border: none; border-radius: 8px; 
-            font-weight: bold; cursor: pointer; font-size: 16px; width: 100%; display: block;
-        }
-        .play-btn { background: #00d4ff; color: #000; }
-        .fs-btn { background: #6e45e2; color: #fff; }
-        .exit-btn { background: #30363d; color: #fff; }
-        #ui { position: absolute; top: 20px; width: 100%; text-align: center; color: #fff; font-size: 24px; }
+        .start-btn { background-color: #00d4ff; color: black; }
+        .full-btn { background-color: #6e45e2; color: white; }
+        .hub-btn { background-color: #30363d; color: white; }
+        
+        button:hover { transform: scale(1.05); filter: brightness(1.2); }
     </style>
 </head>
 <body>
-    <div id="ui">SCORE: <span id="score">0</span></div>
-    
-    <button id="exit-fs-float" onclick="toggleFullScreen()">EXIT FULL SCREEN</button>
 
-    <div id="menu">
+    <div class="menu">
         <h1>SIGMA SLOPE</h1>
-        <button class="btn play-btn" onclick="startGame()">START GAME</button>
-        <button class="btn fs-btn" id="menu-fs-btn" onclick="toggleFullScreen()">FULL SCREEN</button>
-        <button class="btn exit-btn" onclick="exitToHub()">BACK TO HUB</button>
-    </div>
-
-    <div id="death-screen">
-        <h1>GAME OVER</h1>
-        <button class="btn play-btn" onclick="restartGame()">RESTART</button>
-        <button class="btn fs-btn" id="death-fs-btn" onclick="toggleFullScreen()">FULL SCREEN</button>
-        <button class="btn exit-btn" onclick="exitToHub()">EXIT TO HUB</button>
+        
+        <button class="start-btn" onclick="playGame()">START GAME</button>
+        
+        <button class="full-btn" onclick="toggleFullScreen()">FULL SCREEN</button>
+        
+        <button class="hub-btn" onclick="window.parent.location.reload();">BACK TO HUB</button>
     </div>
 
     <script>
-        let scene, camera, renderer, ball, platforms = [];
-        let gameStarted = false, score = 0, speed = 0.55, keys = {};
+        function playGame() {
+            // Replace this with your actual game start logic
+            alert("Game starting... (Link your game engine here!)");
+        }
 
-        function init() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
-
-            const ballGeo = new THREE.SphereGeometry(0.5, 32, 32);
-            const ballMat = new THREE.MeshPhongMaterial({ color: 0x00d4ff });
-            ball = new THREE.Mesh
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>
