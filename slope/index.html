@@ -9,10 +9,13 @@
         .full-btn { background-color: #6e45e2; color: white; }
         .hub-btn { background-color: #30363d; color: white; }
         button:hover { transform: scale(1.05); filter: brightness(1.2); }
-        #game-area { display: none; width: 100vw; height: 100vh; }
+        
+        /* This hides the game until you press start */
+        #game-embed { display: none; width: 100vw; height: 100vh; border: none; }
     </style>
 </head>
 <body>
+
     <div class="menu" id="main-menu">
         <h1>SIGMA SLOPE</h1>
         <button class="start-btn" onclick="playGame()">START GAME</button>
@@ -20,16 +23,15 @@
         <button class="hub-btn" onclick="window.parent.location.reload();">BACK TO HUB</button>
     </div>
 
-    <div id="game-area"></div>
+    <iframe id="game-embed" src="https://images-opensocial.googleusercontent.com/gadgets/proxy?container=focus&url=https://cdn.jsdelivr.net/gh/sk1001-github/slope@master/index.html"></iframe>
 
     <script>
         function playGame() {
-            // Hide the menu and show the game area
+            // Hide the menu and show the game
             document.getElementById('main-menu').style.display = 'none';
-            document.getElementById('game-area').style.display = 'block';
-            
-            // This is where you link your slope_engine.js or Unity loader
-            console.log("Game Engine Starting...");
+            const game = document.getElementById('game-embed');
+            game.style.display = 'block';
+            game.focus();
         }
 
         function toggleFullScreen() {
