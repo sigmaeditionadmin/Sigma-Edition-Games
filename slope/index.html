@@ -13,10 +13,11 @@
         #game-container { display: none; width: 100vw; height: 100vh; flex-direction: column; }
         #game-area { flex-grow: 1; width: 100%; border: none; }
         .footer-bar { height: 40px; background: #161b22; display: flex; justify-content: center; align-items: center; border-top: 2px solid #00d4ff; }
-        .exit-fs-btn { background: none; color: #00d4ff; border: 1px solid #00d4ff; padding: 5px 15px; font-size: 12px; border-radius: 5px; }
+        .exit-fs-btn { background: none; color: #00d4ff; border: 1px solid #00d4ff; padding: 5px 15px; font-size: 12px; width: auto; border-radius: 5px; }
     </style>
 </head>
 <body>
+
     <div class="menu" id="main-menu">
         <h1>SLOPE | SIGMA</h1>
         <button class="start-btn" onclick="startGame()">START GAME</button>
@@ -25,7 +26,7 @@
     </div>
 
     <div id="game-container">
-        <iframe id="game-area" src="https://slope-game.github.io/" allow="fullscreen"></iframe>
+        <iframe id="game-area" src="https://pizzaedition.win/games/slope/" allow="fullscreen"></iframe>
         <div class="footer-bar">
             <button class="exit-fs-btn" onclick="toggleFS()">EXIT FULLSCREEN</button>
         </div>
