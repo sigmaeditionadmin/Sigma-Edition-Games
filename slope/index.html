@@ -9,37 +9,25 @@
         .full-btn { background-color: #6e45e2; color: white; }
         .hub-btn { background-color: #30363d; color: white; }
         button:hover { transform: scale(1.05); filter: brightness(1.2); }
-        
-        /* This hides the game until you press start */
-        #game-embed { display: none; width: 100vw; height: 100vh; border: none; }
+        #game-frame { display: none; width: 100vw; height: 100vh; border: none; }
     </style>
 </head>
 <body>
-
     <div class="menu" id="main-menu">
         <h1>SIGMA SLOPE</h1>
-        <button class="start-btn" onclick="playGame()">START GAME</button>
-        <button class="full-btn" onclick="toggleFullScreen()">FULL SCREEN</button>
+        <button class="start-btn" onclick="startGame()">START GAME</button>
+        <button class="full-btn" onclick="if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();">FULL SCREEN</button>
         <button class="hub-btn" onclick="window.parent.location.reload();">BACK TO HUB</button>
     </div>
 
-    <iframe id="game-embed" src="https://images-opensocial.googleusercontent.com/gadgets/proxy?container=focus&url=https://cdn.jsdelivr.net/gh/sk1001-github/slope@master/index.html"></iframe>
+    <iframe id="game-frame" src="https://slope-game.github.io/"></iframe>
 
     <script>
-        function playGame() {
-            // Hide the menu and show the game
+        function startGame() {
             document.getElementById('main-menu').style.display = 'none';
-            const game = document.getElementById('game-embed');
-            game.style.display = 'block';
-            game.focus();
-        }
-
-        function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
+            const g = document.getElementById('game-frame');
+            g.style.display = 'block';
+            g.focus();
         }
     </script>
 </body>
