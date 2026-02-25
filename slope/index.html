@@ -5,36 +5,37 @@
         body { background-color: black; color: #00d4ff; font-family: sans-serif; text-align: center; margin: 0; overflow: hidden; }
         .menu { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 15px; }
         button { width: 280px; padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; font-size: 18px; transition: 0.2s; }
-        
         .start-btn { background-color: #00d4ff; color: black; }
         .full-btn { background-color: #6e45e2; color: white; }
         .hub-btn { background-color: #30363d; color: white; }
-        
         button:hover { transform: scale(1.05); filter: brightness(1.2); }
+        #game-area { display: none; width: 100vw; height: 100vh; }
     </style>
 </head>
 <body>
-
-    <div class="menu">
+    <div class="menu" id="main-menu">
         <h1>SIGMA SLOPE</h1>
-        
         <button class="start-btn" onclick="playGame()">START GAME</button>
-        
         <button class="full-btn" onclick="toggleFullScreen()">FULL SCREEN</button>
-        
         <button class="hub-btn" onclick="window.parent.location.reload();">BACK TO HUB</button>
     </div>
 
+    <div id="game-area"></div>
+
     <script>
         function playGame() {
-            // Replace this with your actual game start logic
-            alert("Game starting... (Link your game engine here!)");
+            // Hide the menu and show the game area
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('game-area').style.display = 'block';
+            
+            // This is where you link your slope_engine.js or Unity loader
+            console.log("Game Engine Starting...");
         }
 
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen();
-            } else if (document.exitFullscreen) {
+            } else {
                 document.exitFullscreen();
             }
         }
