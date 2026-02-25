@@ -2,53 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sigma Hub | 2026</title>
+    <title>Sigma Edition Hub</title>
     <style>
         :root { --primary: #00d4ff; --bg: #0b0e14; --card-bg: #1c2128; }
         body { background: var(--bg); color: white; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
-        
-        .game-grid { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 50px; }
-        
-        /* The whole card is now the button */
-        .game-card { 
-            background: var(--card-bg); border: 2px solid #30363d; border-radius: 20px; 
-            width: 350px; height: 450px; overflow: hidden; cursor: pointer;
-            transition: all 0.3s ease; position: relative;
-        }
-        .game-card:hover { border-color: var(--primary); transform: scale(1.02); box-shadow: 0 0 20px rgba(0,212,255,0.2); }
-
-        .game-view { width: 100%; height: 350px; background: #000; display: flex; align-items: center; justify-content: center; }
-        
+        header { padding: 30px; margin-bottom: 40px; background: #161b22; border-bottom: 3px solid var(--primary); }
+        .game-grid { display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; }
+        .game-card { background: var(--card-bg); border: 2px solid #30363d; border-radius: 15px; width: 320px; height: 400px; overflow: hidden; display: flex; flex-direction: column; }
+        .game-view { position: relative; flex-grow: 1; background: #000; display: flex; align-items: center; justify-content: center; }
         iframe { width: 100%; height: 100%; border: none; display: none; }
-
-        .play-overlay { 
-            position: absolute; color: var(--primary); font-weight: bold; font-size: 24px;
-            text-transform: uppercase; letter-spacing: 2px;
-        }
-
-        .footer { padding: 20px; background: #161b22; color: var(--primary); font-weight: bold; font-size: 18px; }
+        .play-btn { padding: 15px 35px; background: var(--primary); color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 18px; }
+        .footer { padding: 15px; background: #161b22; color: var(--primary); font-weight: bold; }
     </style>
 </head>
 <body>
-
-    <h1>SIGMA EDITION HUB</h1>
-
+    <header><h1>SIGMA EDITION HUB</h1></header>
     <div class="game-grid">
-        <div class="game-card" onclick="this.querySelector('.play-overlay').style.display='none'; const f=this.querySelector('iframe'); f.style.display='block'; f.src='./slope/index.html';">
+        <div class="game-card">
             <div class="game-view">
-                <div class="play-overlay">▶ Click to Play</div>
+                <button class="play-btn" onclick="this.style.display='none'; const f=this.nextElementSibling; f.style.display='block'; f.src='./slope/index.html';">PLAY SLOPE</button>
                 <iframe allow="fullscreen"></iframe>
             </div>
-            <div class="footer">SLOPE</div>
-        </div>
-
-        <div class="game-card" style="opacity: 0.4; cursor: default;">
-            <div class="game-view">
-                <div class="play-overlay" style="color: #666;">Locked</div>
-            </div>
-            <div class="footer">SPACE WAVES</div>
+            <div class="footer">SLOPE (SIGMA LITE)</div>
         </div>
     </div>
-
 </body>
 </html>
